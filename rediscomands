@@ -1,0 +1,7 @@
+docker exec -it cloudstorage-redis-1 redis-cli
+KEYS spring:session:*
+HGETALL spring:session:sessions:<Мой ключ>
+TTL spring:session:sessions:<Мой ключ>
+
+
+docker exec -it cloudstorage-redis-1 redis-cli FLUSHDB

@@ -1,0 +1,14 @@
+Запрос → /api/files/upload
+   ↓
+Spring Security Filter Chain
+   ↓
+Проверяет: путь в permitAll? → НЕТ
+   ↓
+Проверяет: есть ли аутентификация?
+   ↓
+Spring Session достаёт сессию из Redis по куке
+   ↓
+SecurityContextRepository восстанавливает SecurityContext
+   ↓
+Если пользователь найден → пропускаем к контроллеру ✅
+Если нет → authenticationEntryPoint → 401 JSON ❌
