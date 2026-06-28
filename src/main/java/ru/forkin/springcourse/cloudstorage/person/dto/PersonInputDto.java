@@ -13,6 +13,7 @@ public class PersonInputDto {
     @NotEmpty(message = "Username must not be empty")
     @Size(min=3, max=68, message="Username length must be between 3 and 68 characters")
     private String username;
+
     @NotEmpty(message = "Password must not be empty")
     @Size(min=3, max=68, message="Password length must be between 3 and 68 characters")
     private String password;

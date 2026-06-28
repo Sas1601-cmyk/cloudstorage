@@ -11,24 +11,25 @@ import ru.forkin.springcourse.cloudstorage.person.exceptions.PersonDuplicatedExc
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // todo Все методы для чтения
+@Transactional(readOnly = true)
 public class PersonService {
-
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional // todo этот еще и для записи в рамках одной транзаакции
+    @Transactional
     public PersonOutputDto register(PersonInputDto personInputDto) {
         if (personRepository.findByUsername(personInputDto.getUsername()).isPresent()) {
-            throw new PersonDuplicatedException("User with this username already exists");
-        }
+            throw new PersonDuplicatedException("User with this username already exists");}
         personInputDto.setPassword(passwordEncoder.encode(personInputDto.getPassword()));
         personRepository.save(new Person(
                 personInputDto.getUsername(),
-                personInputDto.getPassword()
-        ));
+                personInputDto.getPassword()));
         return new PersonOutputDto(personInputDto.getUsername());
     }
+
+    public Integer getPersonIdByUsername(String username){
+        return personRepository.getPersonByUsername(username).getId();
+    };
 
     public void checkCorrectCredentialsFromUser(String personName){
         if(personRepository.findByUsername(personName).isEmpty()){

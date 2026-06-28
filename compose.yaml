@@ -8,6 +8,7 @@ services:
       - 3308:3306
     volumes:
       - my_sql_cloud_storage_db:/var/lib/mysql
+
   redis:
     image: redis:latest
     ports:
@@ -17,6 +18,21 @@ services:
       - redis-data:/data
     command: redis-server --save 60 1 --loglevel warning
 
+  minio:
+    image: minio/minio
+    container_name: cloudstorage-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"  # S3 API endpoint
+      - "9001:9001"  # Web Console UI
+    environment:
+        MINIO_ROOT_USER: minioadmin
+        MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+        - minio-data:/data
+    restart: unless-stopped
+
 volumes:
   my_sql_cloud_storage_db:
   redis-data:
+  minio-data:

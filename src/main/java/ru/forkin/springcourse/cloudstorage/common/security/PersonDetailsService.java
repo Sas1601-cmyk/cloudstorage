@@ -1,4 +1,4 @@
-package ru.forkin.springcourse.cloudstorage.security;
+package ru.forkin.springcourse.cloudstorage.common.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +19,10 @@ public class PersonDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person = personRepository.findByUsername(username)
                 .orElseThrow(() -> new PersonNotFoundException("User " + username + " not found!"));
-        // Возвращаем обертку, которую ожидает Spring Security
         return new org.springframework.security.core.userdetails.User(
                 person.getUsername(),
                 person.getPassword(),
-                java.util.Collections.emptyList() // Пока без ролей
+                java.util.Collections.emptyList() // No roles
         );
     }
 }

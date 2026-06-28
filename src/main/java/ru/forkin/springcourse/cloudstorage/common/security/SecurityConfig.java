@@ -1,4 +1,4 @@
-package ru.forkin.springcourse.cloudstorage.security;
+package ru.forkin.springcourse.cloudstorage.common.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,18 +17,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
         http
-            // 1. Доступ к путям
             .authorizeHttpRequests(auth -> auth
+                    //frontend
+                    .requestMatchers(
+                            "/",
+                            "/index.html",
+                            "/assets/**",
+                            "/config.js",
+                            "/*.js",
+                            "/*.css")
+                    .permitAll()
+
+                    //swagger
+                    .requestMatchers(
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/webjars/**"
+                    ).permitAll()
+
                     .requestMatchers("/api/auth/sign-up", "/api/auth/sign-in").permitAll()
                     .anyRequest().authenticated()
             )
 
-            // 2. Отключаем ВСЁ лишнее для REST
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             .csrf(csrf -> csrf.disable())
 
-            // 3. Принудительный JSON при 401 (Требование ТЗ!)
             .exceptionHandling(ex -> ex
                     .authenticationEntryPoint((req, res, authEx) -> {
                         res.setStatus(401);
@@ -50,5 +65,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
 }
+
